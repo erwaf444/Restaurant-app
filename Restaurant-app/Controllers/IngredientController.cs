@@ -7,7 +7,7 @@ namespace Restaurant_app.Controllers
     public class IngredientController : Controller
     {
         private Repository<Ingredient> ingredients;
-            
+
         public IngredientController(ApplicationDbContext context)
         {
             ingredients = new Repository<Ingredient>(context);
@@ -37,6 +37,41 @@ namespace Restaurant_app.Controllers
             if (ModelState.IsValid)
             {
                 await ingredients.AddAsync(ingredient);
+                return RedirectToAction("Index");
+            }
+            return View(ingredient);
+        }
+
+        //Ingredient/Delete
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            return View(await ingredients.GetByIdAsync(id, new QueryOptions<Ingredient>() { Includes = "ProductIngredients.Product" }));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Ingredient ingredient)
+        {
+            await ingredients.DeleteAsync(ingredient.IngredientId);
+            return RedirectToAction("Index");
+        }
+
+
+        //Ingredient/Edit
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            return View(await ingredients.GetByIdAsync(id, new QueryOptions<Ingredient>() { Includes = "ProductIngredients.Product" }));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Ingredient ingredient)
+        {
+            if (ModelState.IsValid)
+            {
+                await ingredients.UpdateAsync(ingredient);
                 return RedirectToAction("Index");
             }
             return View(ingredient);
