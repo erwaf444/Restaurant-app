@@ -4,7 +4,8 @@
     ViewBag.Title = "Menu Items ";
 }
 
-@functions{
+
+@functions {
     string GetDeleteModalId(Product prod)
     {
         return "#deleteModal" + prod.ProductId;
@@ -14,7 +15,6 @@
     {
         return "deleteModal" + prod.ProductId;
     }
-
 }
 
 <h2>Menu Items</h2>
